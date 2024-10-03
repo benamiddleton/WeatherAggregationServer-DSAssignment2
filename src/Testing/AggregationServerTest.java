@@ -1,5 +1,3 @@
-package test;
-
 import main.AggregationServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,6 +59,7 @@ public class AggregationServerTest {
 
             // Check the response contains the expected status code
             assertTrue(response.toString().contains("HTTP/1.1 201 Created"));
+            System.out.println("testPutRequestHandling: Passed");
         }
     }
 
@@ -85,6 +84,8 @@ public class AggregationServerTest {
 
             // Check if the server responded with the correct weather data
             assertTrue(response.toString().contains("Adelaide"));
+            System.out.println("testGetRequestHandling: Passed");
         }
     }
 }
+

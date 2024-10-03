@@ -59,6 +59,8 @@ public class ContentServerTest {
             assertEquals(15, weatherData.getWind_spd_kmh());
             assertEquals(8, weatherData.getWind_spd_kt());
 
+            System.out.println("testParseInputFile: Passed");
+
         } catch (IOException e) {
             fail("Test failed due to IOException: " + e.getMessage());
         } finally {

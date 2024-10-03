@@ -16,7 +16,7 @@ public class GETClient {
         }
     }
 
-    // Retrieve weather data from the server and return it as a JSON string
+    // Method to retrieve weather data from the AggregationServer
     public static String retrieveWeatherData(String serverAddress) {
         String[] serverDetails = serverAddress.split(":");
         String host = serverDetails[0];
@@ -29,12 +29,13 @@ public class GETClient {
 
             LamportClock clock = new LamportClock();
 
+            // Send GET request to the server
             out.println("GET /weather.json HTTP/1.1");
             out.println("User-Agent: ATOMClient/1.0");
             out.println(clock.getTime());
-            out.println(); // Empty line to indicate end of headers
+            out.println();
 
-            // Read and store the weather data in a StringBuilder
+            // Read the response from the server
             String responseLine;
             while ((responseLine = in.readLine()) != null) {
                 responseBuilder.append(responseLine).append("\n");
@@ -47,5 +48,4 @@ public class GETClient {
         }
     }
 }
-
 

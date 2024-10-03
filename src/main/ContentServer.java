@@ -6,6 +6,7 @@ import java.net.*;
 public class ContentServer {
     private static final String[] SERVERS = {"localhost:4567", "localhost:4568", "localhost:4569"};
 
+    // Main method to start the ContentServer
     public static void main(String[] args) {
         WeatherData weatherData = parseInputFile("weather_input.txt");
 
@@ -13,6 +14,7 @@ public class ContentServer {
             return;
         }
 
+        // Try sending weather data to each server in the list
         for (String server : SERVERS) {
             if (sendWeatherData(server, weatherData)) {
                 break;
@@ -20,6 +22,7 @@ public class ContentServer {
         }
     }
 
+    // Method to send weather data to a given server
     public static boolean sendWeatherData(String serverAddress, WeatherData weatherData) {
         String[] serverDetails = serverAddress.split(":");
         String host = serverDetails[0];
@@ -33,6 +36,7 @@ public class ContentServer {
             String weatherDataJson = convertWeatherDataToJson(weatherData);
             int contentLength = weatherDataJson.length();
 
+            // Send PUT request with weather data
             out.println("PUT /weather.json HTTP/1.1");
             out.println("Host: " + host + ":" + port);
             out.println("User-Agent: ATOMClient/1.0");
@@ -43,17 +47,18 @@ public class ContentServer {
             out.println(weatherDataJson);
             out.flush();
 
+            // Read server response, check if the data was successfully stored
             String response = in.readLine();
-
             if (response != null && (response.startsWith("HTTP/1.1 200 OK") || response.startsWith("HTTP/1.1 201 Created"))) {
                 return true;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        return false;  // Failed to send data
     }
 
+    // Method to convert WeatherData object to JSON format
     public static String convertWeatherDataToJson(WeatherData weatherData) {
         return "{\n" +
                 "    \"id\": \"" + weatherData.getId() + "\",\n" +
@@ -76,6 +81,7 @@ public class ContentServer {
                 "}";
     }
 
+    // Method to parse the input file into a WeatherData object
     public static WeatherData parseInputFile(String filename) {
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -87,6 +93,7 @@ public class ContentServer {
             String cloud = null, wind_dir = null;
             int wind_spd_kmh = 0, wind_spd_kt = 0;
 
+            // Parse file content into individual variables
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(":", 2);
                 if (parts.length != 2) continue;
@@ -153,6 +160,7 @@ public class ContentServer {
                 throw new IllegalArgumentException("No id found in input file. Invalid data.");
             }
 
+            // Return populated WeatherData object
             return new WeatherData(id, name, state, time_zone, lat, lon,
                     local_date_time, local_date_time_full, air_temp, apparent_t, cloud, dewpt,
                     press, rel_hum, wind_dir, wind_spd_kmh, wind_spd_kt);
@@ -166,7 +174,5 @@ public class ContentServer {
         }
     }
 }
-
-
 
 

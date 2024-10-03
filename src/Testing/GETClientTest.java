@@ -29,10 +29,12 @@ public class GETClientTest {
 
             // Assert that the actual response matches the expected response
             assertEquals(expectedResponse, actualResponse);
+            System.out.println("testRetrieveWeatherData: Passed");
 
         } catch (IOException e) {
             fail("Test failed due to IOException: " + e.getMessage());
         }
     }
 }
+
 
