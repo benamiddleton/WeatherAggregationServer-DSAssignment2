@@ -1,0 +1,87 @@
+# Testing Instructions for Weather Aggregation System
+
+This document outlines the steps to test the main functionality of the system.
+
+---
+
+## 1. Basic Startup
+
+Verify the system starts and communicates correctly.
+
+1. Start the Aggregation Server:
+    ```bash
+    java AggregationServer
+    ```
+    - The server should start and wait for requests.
+
+2. Start a Content Server:
+    ```bash
+    java ContentServer
+    ```
+    - The content server should send weather data to the aggregation server.
+
+3. Run the GET Client:
+    ```bash
+    java GETClient
+    ```
+    - The client should receive and display weather data from the aggregation server.
+
+---
+
+## 2. Lamport Clock Testing
+
+Ensure Lamport clocks synchronize correctly between servers and clients.
+
+1. Start the Aggregation Server.
+2. Run a Content Server to send weather data.
+3. Run the GET Client to fetch weather data.
+
+- The Lamport clock should update correctly between all components during communication.
+
+---
+
+## 3. PUT and GET Requests
+
+Test ability to handle `PUT` and `GET` requests.
+
+1. Start the Aggregation Server.
+2. Run a Content Server to send weather data using `PUT`.
+3. Run the GET Client to retrieve data using `GET`.
+
+- Weather data should be correctly stored and fetched.
+
+---
+
+## 4. Data Expiration
+
+Test the 30-second data expiration mechanism.
+
+1. Start the Aggregation Server.
+2. Run a Content Server to send data.
+3. Wait 30 seconds and run the GET Client.
+
+- The weather data should expire after 30 seconds and no longer be available.
+
+---
+
+## 5. Fault Tolerance
+
+Verify replication and fault tolerance.
+
+1. Start the Aggregation Server.
+2. Run two Content Servers to send data.
+3. Stop one Content Server and run the GET Client.
+
+- The data should still be available even if one Content Server goes down.
+
+---
+
+## 6. Error Handling and Retries
+
+Test the retry mechanism when the server is unavailable.
+
+1. Start the Aggregation Server and a Content Server.
+2. Stop the Aggregation Server and attempt to send data from the Content Server.
+3. Restart the Aggregation Server and observe retry behavior.
+
+- The Content Server should retry and successfully send data once the server is back online.
