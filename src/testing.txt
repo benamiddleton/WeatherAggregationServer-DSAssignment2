@@ -1,87 +1,84 @@
-# Testing Instructions for Weather Aggregation System
+Testing Instructions for Weather Aggregation Server
+===================================================
+Unit Testing:
+-------------
+This project includes automated unit tests for the Aggregation Server, Content Server, and GET Client using JUnit.
 
-This document outlines the steps to test the main functionality of the system.
+**From the Command Line:**
+   - Ensure that the JUnit library is included in your classpath.
+   - Navigate to the `Testing` directory and run the tests using the following command:
+     ```
+     java -cp ".;path/to/junit.jar" org.junit.runner.JUnitCore Testing.AggregationServerTest
+     ```
 
----
+JUnit Test Explanations:
+------------------------
+Here is a breakdown of the JUnit tests included in the project:
 
-## 1. Basic Startup
+### 1. AggregationServerTest.java:
+- **testPutRequestHandling():**
+  - Simulates a client sending a `PUT` request to the Aggregation Server with weather data.
+  - Verifies that the server responds with "HTTP/1.1 201 Created" if the data was added successfully.
+  - Ensures that the Aggregation Server correctly handles and stores the weather data.
 
-Verify the system starts and communicates correctly.
+- **testGetRequestHandling():**
+  - Simulates a client sending a `GET` request to the Aggregation Server.
+  - Verifies that the server responds with the correct weather data, ensuring that the data stored by the `PUT` request is properly returned.
+  - Ensures that the Aggregation Server correctly handles and serves `GET` requests.
 
-1. Start the Aggregation Server:
-    ```bash
-    java AggregationServer
-    ```
-    - The server should start and wait for requests.
+### 2. ContentServerTest.java:
+- **testParseInputFile():**
+  - Simulates the weather input file that the Content Server reads from.
+  - Tests the `parseInputFile()` method by checking that it correctly parses the file and returns a valid `WeatherData` object.
+  - Asserts that all fields in the `WeatherData` object match the expected values from the input file.
 
-2. Start a Content Server:
-    ```bash
-    java ContentServer
-    ```
-    - The content server should send weather data to the aggregation server.
+### 3. GETClientTest.java:
+- **testRetrieveWeatherData():**
+  - Simulates the response from the Aggregation Server that the GET Client receives.
+  - Tests the `retrieveWeatherData()` method by checking that the GET Client correctly retrieves and processes the server's response.
+  - Verifies that the actual response matches the expected response.
 
-3. Run the GET Client:
-    ```bash
-    java GETClient
-    ```
-    - The client should receive and display weather data from the aggregation server.
+### 4. JUnitTest.java:
+- **testAddition():**
+  - A basic test to demonstrate the use of JUnit.
+  - Asserts that the addition of two numbers (2 + 2) equals 4.
 
----
+Manual Testing:
+---------------
+To manually test the functionality of the Weather Aggregation Server, follow these steps:
 
-## 2. Lamport Clock Testing
+1. **Aggregation Server:**
+   - Start the Aggregation Server using the command:
+     ```
+     java main.AggregationServer
+     ```
+   - The server will start on port 4567 and will wait for incoming connections.
+   - The server can handle both `PUT` and `GET` requests.
 
-Ensure Lamport clocks synchronize correctly between servers and clients.
+2. **Content Server:**
+   - Run the Content Server to send weather data to the Aggregation Server.
+   - Use the following command to start the Content Server:
+     ```
+     java main.ContentServer
+     ```
+   - The Content Server will read the weather data from `weather_input.txt` and send it to the Aggregation Server using a `PUT` request.
 
-1. Start the Aggregation Server.
-2. Run a Content Server to send weather data.
-3. Run the GET Client to fetch weather data.
+3. **GET Client:**
+   - Start the GET Client to fetch weather data from the Aggregation Server.
+   - Use the following command to run the GET Client:
+     ```
+     java main.GETClient
+     ```
+   - The GET Client will send a `GET` request to the Aggregation Server and retrieve the stored weather data, printing it to the console.
 
-- The Lamport clock should update correctly between all components during communication.
+### Manual Testing Verification:
+- **PUT Requests:**
+  - After running the Content Server, verify that the Aggregation Server responds with "HTTP/1.1 201 Created" if the data was added successfully or "HTTP/1.1 200 OK" if the data was updated.
+  - You should see log messages on the Aggregation Server indicating successful reception and storage of weather data.
 
----
+- **GET Requests:**
+  - After running the GET Client, verify that the Aggregation Server sends back the weather data, and it is displayed in the GET Client console.
+  - The log on the Aggregation Server should indicate that a GET request was served successfully.
 
-## 3. PUT and GET Requests
-
-Test ability to handle `PUT` and `GET` requests.
-
-1. Start the Aggregation Server.
-2. Run a Content Server to send weather data using `PUT`.
-3. Run the GET Client to retrieve data using `GET`.
-
-- Weather data should be correctly stored and fetched.
-
----
-
-## 4. Data Expiration
-
-Test the 30-second data expiration mechanism.
-
-1. Start the Aggregation Server.
-2. Run a Content Server to send data.
-3. Wait 30 seconds and run the GET Client.
-
-- The weather data should expire after 30 seconds and no longer be available.
-
----
-
-## 5. Fault Tolerance
-
-Verify replication and fault tolerance.
-
-1. Start the Aggregation Server.
-2. Run two Content Servers to send data.
-3. Stop one Content Server and run the GET Client.
-
-- The data should still be available even if one Content Server goes down.
-
----
-
-## 6. Error Handling and Retries
-
-Test the retry mechanism when the server is unavailable.
-
-1. Start the Aggregation Server and a Content Server.
-2. Stop the Aggregation Server and attempt to send data from the Content Server.
-3. Restart the Aggregation Server and observe retry behavior.
-
-- The Content Server should retry and successfully send data once the server is back online.
+### Summary:
+These tests ensure that the core functionality of the Aggregation Server, Content Server, and GET Client works as expected. The unit tests provide coverage for request handling, data parsing, and communication between the servers and clients.
