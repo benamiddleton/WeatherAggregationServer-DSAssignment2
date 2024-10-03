@@ -85,7 +85,8 @@ Compilation and Usage:
 Requirements:
 -------------
 - **Java 11+**: The code is compatible with Java 11 and newer versions.
-- **JUnit**These libraries are required for running the unit tests.
+- **JUnit** These libraries are required for running the unit tests.
+- **Gson** Required for JSON parsing and handling within the project
 - **Mockito & ByteBuddy**: Could be used in future testing
 
 
